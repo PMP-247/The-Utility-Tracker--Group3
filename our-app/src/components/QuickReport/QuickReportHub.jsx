@@ -1,6 +1,6 @@
 import { useState } from "react";
 import CategoryGrid from "./CategoryGrid";
-import EvidenceUploader from "./EvidenceUploader";
+/*import EvidenceUploader from "./EvidenceUploader";*/
 import DescriptionInput from "./DescriptionInput";
 import SubmitButton from "./SubmitButton";
 import SuccessToast from "./SuccessToast";
@@ -24,7 +24,7 @@ export default function QuickReportHub() {
       <h3 className="text-xl font-bold mb-4">Quick Report Hub</h3>
       <form onSubmit={handleSubmit}>
         <CategoryGrid />
-        <EvidenceUploader />
+        {/* <EvidenceUploader /> */}
         <DescriptionInput />
         <SubmitButton status={status} />
       </form>
