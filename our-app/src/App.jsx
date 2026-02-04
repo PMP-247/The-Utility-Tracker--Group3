@@ -12,7 +12,7 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
-      <header className="w-full bg-blue-600 text-white py-4 px-6 flex justify-between items-center">
+      <header className="w-full bg-blue-600 text-white py-4 px-6 flex justify-between items-center shrink-0">
         <h1 className="text-xl md:text-2xl font-bold">Utility Tracker</h1>
         {isLoggedIn && (
           <button
@@ -23,15 +23,16 @@ function App() {
           </button>
         )}
       </header>
-
-      {/* Main content fills remaining screen */}
-      <main className="flex-1 bg-gray-50 overflow-auto p-6">
+  
+      {/* Main content fills remaining screen and centers child */}
+      <main className="flex-1 bg-gray-50 flex flex-col justify-center items-center p-6">
         {isLoggedIn ? (
-          <QuickReportHub />
-        ) : (
-          <div className="flex justify-center items-center h-full">
-            <AuthForm onAuthSuccess={handleLoginSuccess} />
+          <div className="w-full h-full">
+            <QuickReportHub />
           </div>
+        ) : (
+          /* This container now sits in the dead center of the flex-1 main area */
+          <AuthForm onAuthSuccess={handleLoginSuccess} />
         )}
       </main>
     </div>
