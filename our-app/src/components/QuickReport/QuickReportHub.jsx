@@ -4,41 +4,33 @@ import DescriptionInput from "./DescriptionInput";
 import SubmitButton from "./SubmitButton";
 import SuccessToast from "./SuccessToast";
 
+
 export default function QuickReportHub() {
-  const [category, setCategory] = useState("");
-  const [description, setDescription] = useState("");
   const [status, setStatus] = useState("idle");
+  const [success, setSuccess] = useState(false);
 
-  const handleSubmit = () => {
-    setStatus("loading");
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus("pending");
+    // simulate API call
     setTimeout(() => {
       setStatus("success");
-      setCategory("");
-      setDescription("");
-    }, 1000);
+      setSuccess(true);
+    }, 1500);
   };
 
   return (
-    // Outer container: centers the card horizontally & fills parent height
     <div className="flex justify-center items-start w-full h-full">
-
-      {/* ← Paste your new card div here */}
-      <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg p-8 flex flex-col gap-6 min-h-[70vh]">
-
+      <div id="report" className="w-full max-w-4xl bg-white rounded-xl shadow-lg p-8 flex flex-col gap-6 mt-8">
         <h2 className="text-3xl font-bold text-blue-600">Report a Community Issue</h2>
-
-        {/* Form components */}
-        <CategoryGrid selected={category} onSelect={setCategory} />
-        <DescriptionInput value={description} onChange={setDescription} />
-        <SubmitButton status={status} onSubmit={handleSubmit} />
-
-        {/* Success message */}
-        {status === "success" && <SuccessToast />}
-
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          <CategoryGrid />
+          {/* <EvidenceUploader /> */}
+          <DescriptionInput />
+          <SubmitButton status={status} />
+        </form>
+        {success && <SuccessToast />}
       </div>
-      {/* End of card div */}
-
     </div>
   );
 }
