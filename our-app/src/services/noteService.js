@@ -1,28 +1,55 @@
-import { supabase } from '../supabaseClient'; // This line fixes the 'supabase is not defined' error
+import { supabase } from '../supabaseClient';
 
-// Function to fetch historical reports
+/**
+ * FETCH: Gets all reports for the currently logged-in user.
+ * Sorted by newest first.
+ */
 export const getMyReports = async () => {
-  const { data, error } = await supabase
-    .from('notes')
-    .select('*')
-    .order('created_at', { ascending: false });
+  try {
+    const { data, error } = await supabase
+      .from('notes')
+      .select('*')
+      .order('created_at', { ascending: false });
 
-  if (error) {
-    console.error("Error fetching history:", error.message);
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error("Error in getMyReports:", error.message);
     return [];
   }
-  return data;
 };
 
-// Function to create a new report
-export const createReport = async (content, userId) => {
-  const { data, error } = await supabase
-    .from('notes')
-    .insert([{ content, user_id: userId }]);
+/**
+ * INSERT: Saves a new report to the database.
+ * Automatically links the report to the current user's ID.
+ */
+export const createReport = async (category, description) => {
+  try {
+    // 1. Get the current user session
+    const { data: { user } } = await supabase.auth.getUser();
 
-  if (error) {
-    console.error("Error creating report:", error.message);
+    if (!user) {
+      throw new Error("No authenticated user found. Please log in.");
+    }
+
+    // 2. Insert the data into the 'notes' table
+    const { data, error } = await supabase
+      .from('notes')
+      .insert([
+        {
+          user_id: user.id,
+          category: category,
+          description: description,
+          // If your column is named 'content' instead of 'description', 
+          // change the key name above to 'content'
+        }
+      ])
+      .select(); 
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error in createReport:", error.message);
     throw error;
   }
-  return data;
 };
