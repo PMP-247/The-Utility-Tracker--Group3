@@ -1,10 +1,11 @@
-export default function DescriptionInput({ value, onChange }) {
+export default function DescriptionInput() {
   return (
-    <textarea
-      className="w-full p-3 border rounded mb-4"
-      placeholder="Describe the issue..."
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-    />
+    <div className="mb-4">
+      <label className="block mb-2 font-medium">Description</label>
+      <textarea
+        className="w-full border rounded p-2"
+        placeholder="Describe the issue... #urgent #location"
+      />
+    </div>
   );
 }
