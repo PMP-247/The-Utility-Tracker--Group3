@@ -1,11 +1,16 @@
-export default function SubmitButton({ status, onSubmit }) {
+export default function SubmitButton({ status }) {
+  const text =
+    status === "idle" ? "Submit" :
+    status === "pending" ? "Submitting..." :
+    "Submitted ✅";
+
   return (
     <button
-      onClick={onSubmit}
-      disabled={status === "loading"}
-      className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+      type="submit"
+      disabled={status === "pending"}
+      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
     >
-      {status === "loading" ? "Submitting..." : "Submit"}
+      {text}
     </button>
   );
 }
