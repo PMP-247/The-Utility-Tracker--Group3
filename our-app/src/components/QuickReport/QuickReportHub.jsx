@@ -1,9 +1,9 @@
 import { useState } from "react";
 import CategoryGrid from "./CategoryGrid";
+/*import EvidenceUploader from "./EvidenceUploader";*/
 import DescriptionInput from "./DescriptionInput";
 import SubmitButton from "./SubmitButton";
 import SuccessToast from "./SuccessToast";
-
 
 export default function QuickReportHub() {
   const [status, setStatus] = useState("idle");
@@ -20,17 +20,15 @@ export default function QuickReportHub() {
   };
 
   return (
-    <div className="flex justify-center items-start w-full h-full">
-      <div id="report" className="w-full max-w-4xl bg-white rounded-xl shadow-lg p-8 flex flex-col gap-6 mt-8">
-        <h2 className="text-3xl font-bold text-blue-600">Report a Community Issue</h2>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-          <CategoryGrid />
-          {/* <EvidenceUploader /> */}
-          <DescriptionInput />
-          <SubmitButton status={status} />
-        </form>
-        {success && <SuccessToast />}
-      </div>
+    <div id="report" className="max-w-lg mx-auto bg-white shadow-md rounded p-6 mt-8">
+      <h3 className="text-xl font-bold mb-4">Quick Report Hub</h3>
+      <form onSubmit={handleSubmit}>
+        <CategoryGrid />
+        {/* <EvidenceUploader /> */}
+        <DescriptionInput />
+        <SubmitButton status={status} />
+      </form>
+      {success && <SuccessToast />}
     </div>
   );
 }
