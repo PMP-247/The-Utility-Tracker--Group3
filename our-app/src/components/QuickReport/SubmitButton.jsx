@@ -1,14 +1,18 @@
 export default function SubmitButton({ status }) {
+  const isPending = status === "pending";
+  
   const text =
-    status === "idle" ? "Submit" :
-    status === "pending" ? "Submitting..." :
-    "Submitted ✅";
+    status === "idle" ? "Submit Report" :
+    isPending ? "Submitting..." :
+    "Report Submitted ✅";
 
   return (
     <button
-      type="submit"
-      disabled={status === "pending"}
-      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      type="submit" 
+      disabled={isPending}
+      className={`w-full py-3 rounded-lg font-bold text-white transition-all ${
+        isPending ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700 active:scale-95"
+      }`}
     >
       {text}
     </button>
