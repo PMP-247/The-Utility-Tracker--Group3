@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import AuthForm from './components/AuthFormTemp';
+import AuthForm from './components/AuthForm';
 import Navbar from './components/QuickReport/Navbar';
 import HeroSection from './components/QuickReport/HeroSection';
 import QuickReportHub from './components/QuickReport/QuickReportHub';
