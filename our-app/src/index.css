@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Remove the body flex styles entirely */
+
 body {
   margin: 0;
   padding: 0;
