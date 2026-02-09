@@ -3,7 +3,7 @@ import { supabase } from "../../supabaseClient";
 import CategoryGrid from "./CategoryGrid";
 import SubmitButton from "./SubmitButton";
 import SuccessToast from "./SuccessToast";
-import RealtimeFeedback from './RealtimeFeedback'
+import RealtimeFeedback from './RealtimeFeedback';
 
 export default function Complaints() {
   const [status, setStatus] = useState("idle");
@@ -28,13 +28,22 @@ export default function Complaints() {
     setStatus("pending");
 
     const formData = new FormData(e.target);
-    const { data: userData } = await supabase.auth.getUser();
+    
+    //  RLS Policy: (auth.uid() = user_id)
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      console.error("Authentication required");
+      setStatus("idle");
+      alert("Please log in to submit a report.");
+      return;
+    }
 
     const newComplaint = {
-      category: formData.get("category"), // Matches <select name="category">
-      description: formData.get("description"), // Matches <textarea name="description">
+      category: formData.get("category"), 
+      description: formData.get("description"), 
       status: 'Pending',
-      user_id: userData.user?.id
+      user_id: user.id 
     };
 
     const { data, error } = await supabase
@@ -45,12 +54,13 @@ export default function Complaints() {
     if (error) {
       console.error("Submission Error:", error.message);
       setStatus("idle");
+      alert(`Error: ${error.message}`);
     } else {
       setStatus("success");
       setSuccess(true);
       
-     
-      setReports((prev) => [data[0], ...prev]);
+ 
+      if (data) setReports((prev) => [data[0], ...prev]);
 
       setTimeout(() => {
         setSuccess(false);
@@ -62,7 +72,7 @@ export default function Complaints() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-10">
-   
+      {/* 1. My Complaints Table */}
       <section>
         <h2 className="text-2xl font-bold mb-4">My Complaints</h2>
         <div className="bg-white shadow rounded-lg border border-gray-200 overflow-hidden">
@@ -76,35 +86,40 @@ export default function Complaints() {
               </tr>
             </thead>
             <tbody>
-             
-              {reports.slice(0, 5).map(r => (
-                <tr key={r.id} className="border-b last:border-0">
-                  <td className="px-4 py-3">#{r.id}</td>
-                  <td className="px-4 py-3 capitalize">{r.category}</td>
-                  <td className="px-4 py-3 text-gray-600 truncate max-w-xs">{r.description}</td>
-                  <td className="px-4 py-3">
-                    <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs">
-                      {r.status}
-                    </span>
-                  </td>
+              {reports.length > 0 ? (
+                reports.slice(0, 5).map(r => (
+                  <tr key={r.id} className="border-b last:border-0">
+                    <td className="px-4 py-3">#{r.id}</td>
+                    <td className="px-4 py-3 capitalize">{r.category}</td>
+                    <td className="px-4 py-3 text-gray-600 truncate max-w-xs">{r.description}</td>
+                    <td className="px-4 py-3">
+                      <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs">
+                        {r.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="px-4 py-8 text-center text-gray-400">No reports found.</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
       </section>
 
- 
+  
       <section className="bg-white p-8 rounded-xl shadow-lg border">
-        <h3 className="text-xl font-bold mb-6">File a New Report</h3>
+        <h3 className="text-xl font-bold mb-6 text-blue-900">File a New Report</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <CategoryGrid />
           <div>
-            <label className="block mb-2 font-medium">Description</label>
+            <label className="block mb-2 font-medium text-gray-700">Description</label>
             <textarea 
               name="description" 
-              className="w-full border rounded-lg p-3 h-28 focus:ring-2 focus:ring-blue-500 outline-none transition" 
-              placeholder="What's happening?"
+              className="w-full border border-gray-300 rounded-lg p-3 h-28 focus:ring-2 focus:ring-blue-500 outline-none transition" 
+              placeholder="Provide more details about the issue..."
               required
             ></textarea>
           </div>
@@ -113,8 +128,8 @@ export default function Complaints() {
         {success && <SuccessToast />}
       </section>
 
-      {/* Real-time Community Feed */}
-      <RealtimeFeed reports={reports} />
+   
+      <RealtimeFeedback reports={reports} />
     </div>
   );
 }

@@ -8,7 +8,7 @@ export default function EvidenceUploader() {
           </p>
           <p className="text-xs text-gray-500">PNG, JPG or PDF (MAX. 10MB)</p>
         </div>
-        {/* The name="evidence" attribute allows Supabase to pick up the file if you handle it later */}
+
         <input 
           name="evidence" 
           type="file" 

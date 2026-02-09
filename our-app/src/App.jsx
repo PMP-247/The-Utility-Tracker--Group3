@@ -28,7 +28,7 @@ function App() {
               <AuthForm onAuthSuccess={handleLoginSuccess} />
             </div>
           } />
-          <Route path="/report" element={isLoggedIn ? <QuickReportHub /> : <Navigate to="/login" />} />
+          <Route path="/report" element={<QuickReportHub />} />
           <Route path="/complaints" element={isLoggedIn ? <Complaints /> : <Navigate to="/login" />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/admin" element={<AdminPanel />} />
